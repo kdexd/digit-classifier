@@ -20,3 +20,15 @@ class NeuralNetwork (object):
     def sigmoid(z):
         # if the input is numpy vector or matrix, sigmoid would be applied element-wise
         return 1.0/(1.0 + np.exp(-z))
+
+
+    def feedforward (self, activation):
+        # output = sigmoid(activation of previous * weight of current + bias of current)
+
+        for b, w in zip(self.biases, self.weights):
+            # activation was passed as a parameter to have it as a list, not a number
+            activation = sigmoid (np.dot(w,a) + b)
+        return activation
+
+
+    
