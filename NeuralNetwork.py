@@ -14,5 +14,9 @@ class NeuralNetwork (object):
         # random generation is through guassian distribution
         # random numbers will have mean 0 and std dev 1
         self.biases = [np.random.randn(y, 1) for y in sizes[1:]]
-        self.weights = [np.random.randn(y, x)
-                        for x, y in zip(sizes[:-1], sizes[1:])]
+        self.weights = [np.random.randn(y, x) for x, y in zip(sizes[:-1], sizes[1:])]
+
+
+    def sigmoid(z):
+        # if the input is numpy vector or matrix, sigmoid would be applied element-wise
+        return 1.0/(1.0 + np.exp(-z))
