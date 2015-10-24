@@ -166,3 +166,18 @@ def sigmoid(z):
 def sigmoidPrime(z):
     """Derivative of the sigmoid function."""
     return sigmoid(z)*(1-sigmoid(z))
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    Developed By:
+        __   __       ______
+        | | / /       | ___ \
+        | |/ /        | |  \ \
+        |   <         | |   \ \
+        | |\ \        | |   / /
+        | | \ \   __  | |__/ / __
+        |_|  \_\ /_/  |_____/ /_/
+
+     *  Resource : neuralnetworksanddeeplearning.com
+     *  A good resource for learning basic concepts and implementation.
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
