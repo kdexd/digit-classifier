@@ -1,9 +1,37 @@
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    NeuralNetwork.py
+
+    *   A module to implement stochastic gradient descent learning
+        algorithm for a feed forward neural network.
+
+    *   The class NeuralNetwork has the following methods:
+        -> __init__         : for initializing number of layers, size of each
+                              size, weights and biases of each layer.
+        -> feedforward      : calculates activations of neurons of current layer.
+        -> stocGradDesc     : implementation of the stochastic gradient descent.
+        -> updateMiniBatch  : Update the network's weights and biases by applying
+                              gradient descent using backpropagation to a single
+                              mini batch.
+        -> backPropagation  : the backpropagation algorithm used for updating
+                              mini batch.
+        -> evaluate         : return the number of test inputs for which the neural
+                              network outputs the correct result.
+        -> costDerivative   : return a vector of partial derivatives for output
+                              activations.
+
+    *   Other than these, there are two other methods in the module:
+        -> sigmoid          : calculates the sigmoid of the parameter passed.
+        -> sigmoidPrime     : calculates the derivative of sigmoid of the
+                              parameter passed.
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 import random
 import numpy as np
 
-class NeuralNetwork (object):
 
-    def __init__ (self, sizes):
+class NeuralNetwork(object):
+
+    def __init__(self, sizes):
         # sizes is a list of neurons in successive layers
 
         # the number of layers in the network is equal to length of 'sizes' list
@@ -18,22 +46,16 @@ class NeuralNetwork (object):
         self.weights = [np.random.randn(y, x) for x, y in zip(sizes[:-1], sizes[1:])]
 
 
-    def sigmoid(z):
-        # if the input is numpy vector or matrix, sigmoid would be applied element-wise
-        return 1.0/(1.0 + np.exp(-z))
-
-
-    def feedforward (self, activation):
+    def feedforward(self, activation):
         # output = sigmoid(activation of previous * weight of current + bias of current)
 
         for b, w in zip(self.biases, self.weights):
             # activation was passed as a parameter to have it as a list, not a number
-            activation = self.sigmoid (np.dot(w, activation) + b)
+            activation = sigmoid (np.dot(w, activation) + b)
         return activation
 
 
-
-    def stochasticGradDesc(self, trainingData, epochs, miniBatchSize, eta, testData=None):
+    def stocGradDesc(self, trainingData, epochs, miniBatchSize, eta, testData=None):
         """Train the neural network using mini-batch stochastic
         gradient descent.  The "training_data" is a list of tuples
         "(x, y)" representing the training inputs and the desired
@@ -61,7 +83,7 @@ class NeuralNetwork (object):
                 print "Epoch {0} complete".format(j)
 
 
-    def updateMiniBatch (self, miniBatch, eta):
+    def updateMiniBatch(self, miniBatch, eta):
         """Update the network's weights and biases by applying
         gradient descent using backpropagation to a single mini batch.
         The ``miniBatch`` is a list of tuples ``(x, y)``, and ``eta``
@@ -96,12 +118,12 @@ class NeuralNetwork (object):
         for b, w in zip(self.biases, self.weights):
             z = np.dot(w, activation)+b
             zs.append(z)
-            activation = self.sigmoid(z)
+            activation = sigmoid(z)
             activations.append(activation)
 
         # backward pass
         delta = self.costDerivative(activations[-1], y) * \
-            self.sigmoidPrime(zs[-1])
+            sigmoidPrime(zs[-1])
         delB[-1] = delta
         delW[-1] = np.dot(delta, activations[-2].transpose())
 
@@ -113,24 +135,34 @@ class NeuralNetwork (object):
         # that Python can use negative indices in lists.
         for l in xrange(2, self.numberOfLayers):
             z = zs[-l]
-            sp = self.sigmoidPrime(z)
+            sp = sigmoidPrime(z)
             delta = np.dot(self.weights[-l+1].transpose(), delta) * sp
             delB[-l] = delta
             delW[-l] = np.dot(delta, activations[-l-1].transpose())
         return (delB, delW)
 
 
-    def evaluate(self, test_data):
+    def evaluate(self, testData):
         """Return the number of test inputs for which the neural
         network outputs the correct result. Note that the neural
         network's output is assumed to be the index of whichever
         neuron in the final layer has the highest activation."""
-        test_results = [(np.argmax(self.feedforward(x)), y)
-                        for (x, y) in test_data]
-        return sum(int(x == y) for (x, y) in test_results)
+        testResults = [(np.argmax(self.feedforward(x)), y)
+                        for (x, y) in testData]
+        return sum(int(x == y) for (x, y) in testResults)
 
 
-    def costDerivative(self, output_activations, y):
+    def costDerivative(self, outputActivations, y):
         """Return the vector of partial derivatives \partial C_x /
         \partial a for the output activations."""
-        return (output_activations-y)
+        return (outputActivations-y)
+
+
+def sigmoid(z):
+    # if the input is numpy vector or matrix, sigmoid would be applied element-wise
+    return 1.0/(1.0 + np.exp(-z))
+
+
+def sigmoidPrime(z):
+    """Derivative of the sigmoid function."""
+    return sigmoid(z)*(1-sigmoid(z))
