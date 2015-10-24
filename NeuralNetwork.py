@@ -1,4 +1,4 @@
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     NeuralNetwork.py
 
     *   A module to implement stochastic gradient descent learning
@@ -23,28 +23,34 @@
         -> sigmoid          : calculates the sigmoid of the parameter passed.
         -> sigmoidPrime     : calculates the derivative of sigmoid of the
                               parameter passed.
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 import random
 import numpy as np
 
 
+# NeuralNetwork class begins#################################################################
 class NeuralNetwork(object):
 
     def __init__(self, sizes):
+        """ Initializes important parameters for the neural network. """
+
         # sizes is a list of neurons in successive layers
+        self.sizes = sizes
 
         # the number of layers in the network is equal to length of 'sizes' list
         self.numberOfLayers = len(sizes)
 
-        self.sizes = sizes
-
         # random initialization of weights/ biases for a starting to gradient descent
-        # random generation is through guassian distribution
+        # random generation is through gaussian distribution
         # random numbers will have mean 0 and std dev 1
+
         self.biases = [np.random.randn(y, 1) for y in sizes[1:]]
+        # sizes[0] is not counted for biases as input neurons don't have biases
+
         self.weights = [np.random.randn(y, x) for x, y in zip(sizes[:-1], sizes[1:])]
 
+    """-----------------------------------------------------------------------------------"""
 
     def feedforward(self, activation):
         # output = sigmoid(activation of previous * weight of current + bias of current)
@@ -54,17 +60,22 @@ class NeuralNetwork(object):
             activation = sigmoid (np.dot(w, activation) + b)
         return activation
 
+    """-----------------------------------------------------------------------------------"""
 
     def stocGradDesc(self, trainingData, epochs, miniBatchSize, eta, testData=None):
-        """Train the neural network using mini-batch stochastic
-        gradient descent.  The "training_data" is a list of tuples
-        "(x, y)" representing the training inputs and the desired
-        outputs. The number of epochs to train for, and the size of
-        mini-batches to use when sampling. If "test_data" is provided
-        then network will be evaluated against the test data after each
-        epoch, and partial progress printed out.  This is useful for
-        tracking progress, but slows things down substantially."""
+        """ Train the neural network using mini-batch stochastic
+        gradient descent.
+        ->  The 'trainingData' is a list of tuples '(x, y)',
+            representing the training inputs and the desired
+            outputs.
+        ->  The number of epochs to train for, and the size of
+            mini-batches to use when sampling.
+        ->  If 'testData' is provided, then network will be evaluated
+            against the test data after each epoch, and the
+            partial progress i printed out. This is useful for
+        tracking progress, but slows things down substantially. """
 
+        # no testData provided currently, so 'evaluate' is not of concern yet
         if testData:
             numberOfTests = len (testData)
 
@@ -77,17 +88,19 @@ class NeuralNetwork(object):
             for miniBatch in miniBatches:
                 self.updateMiniBatch(miniBatch, eta)
 
+            # no testData provided currently, so 'evaluate' is not of concern yet
             if testData:
                 print "Epoch {0}: {1} / {2}".format(j, self.evaluate(testData), numberOfTests)
             else:
                 print "Epoch {0} complete".format(j)
 
+    """-----------------------------------------------------------------------------------"""
 
     def updateMiniBatch(self, miniBatch, eta):
-        """Update the network's weights and biases by applying
+        """ Update the network's weights and biases by applying
         gradient descent using backpropagation to a single mini batch.
-        The ``miniBatch`` is a list of tuples ``(x, y)``, and ``eta``
-        is the learning rate."""
+        The 'miniBatch' is a list of tuples '(x, y)', and 'eta'
+        is the learning rate. """
 
         delB = [np.zeros(b.shape) for b in self.biases]
         delW = [np.zeros(w.shape) for w in self.weights]
@@ -100,13 +113,14 @@ class NeuralNetwork(object):
                         for w, nw in zip(self.weights, delW)]
         self.biases = [b-(eta/len(miniBatch))*nb
                        for b, nb in zip(self.biases, delB)]
-        
-        
+
+    """-----------------------------------------------------------------------------------"""
+
     def backprop(self, x, y):
-        """Return a tuple ``(delB, delW)`` representing the
-        gradient for the cost function C_x.  ``delB`` and
-        ``delW`` are layer-by-layer lists of numpy arrays, similar
-        to ``self.biases`` and ``self.weights``."""
+        """ Return a tuple (delB, delW) representing the
+        gradient for the cost function C_x.  delB and
+        delW are layer-by-layer lists of numpy arrays,
+        similar to self.biases and self.weights. """
         delB = [np.zeros(b.shape) for b in self.biases]
         delW = [np.zeros(w.shape) for w in self.weights]
 
@@ -141,34 +155,38 @@ class NeuralNetwork(object):
             delW[-l] = np.dot(delta, activations[-l-1].transpose())
         return (delB, delW)
 
+    """-----------------------------------------------------------------------------------"""
+    # no testData provided currently, so 'evaluate' is not of concern yet
 
     def evaluate(self, testData):
-        """Return the number of test inputs for which the neural
+        """ Return the number of test inputs for which the neural
         network outputs the correct result. Note that the neural
         network's output is assumed to be the index of whichever
-        neuron in the final layer has the highest activation."""
+        neuron in the final layer has the highest activation. """
         testResults = [(np.argmax(self.feedforward(x)), y)
                         for (x, y) in testData]
         return sum(int(x == y) for (x, y) in testResults)
 
+    """-----------------------------------------------------------------------------------"""
 
     def costDerivative(self, outputActivations, y):
-        """Return the vector of partial derivatives \partial C_x /
-        \partial a for the output activations."""
+        """ Return the vector of partial derivatives \partial C_x /
+        \partial a for the output activations. """
         return (outputActivations-y)
 
+# NeuralNetwork class ends ##################################################################
 
 def sigmoid(z):
-    # if the input is numpy vector or matrix, sigmoid would be applied element-wise
+    """ Returns the sigmoid of a given number or array (element-wise). """
     return 1.0/(1.0 + np.exp(-z))
 
 
 def sigmoidPrime(z):
-    """Derivative of the sigmoid function."""
+    """ Returns the derivative of the sigmoid function. """
     return sigmoid(z)*(1-sigmoid(z))
 
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     Developed By:
         __   __       ______
         | | / /       | ___ \
@@ -180,4 +198,4 @@ def sigmoidPrime(z):
 
      *  Resource : neuralnetworksanddeeplearning.com
      *  A good resource for learning basic concepts and implementation.
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
