@@ -1,2 +1,6 @@
 # Compiled code files of modules
 *.pyc
+
+# Intellij project files
+*.iml
+.idea/
