@@ -6,7 +6,7 @@ import numpy as np
 
 
 def loadData():
-    file = gzip.open("/data/mnist.pkl.gz")
+    file = gzip.open('data/mnist.pkl.gz', 'rb')
     trainingData, validationData, testData = cPickle.load(file)
     file.close()
     return trainingData, validationData, testData
@@ -29,7 +29,7 @@ def loadDataWrapper():
 
 
 def vectorizedResult(j):
-    e = np.zeros((10,1))
+    e = np.zeros((10, 1))
     e[j] = 1.0
 
     return e
