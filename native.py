@@ -69,4 +69,8 @@ class NeuralNetwork(object):
             for x, y in training_data:
                 nabla_b, nabla_w = self.back_propagation(x, y)
                 self.weights = [w - eta * dw for w, dw in self.weights, nabla_w]
-                self.biases = [b - eta * db for b, db  in self.biases, nabla_b]
+                self.biases = [b - eta * db for b, db in self.biases, nabla_b]
+
+    def predict(self, x):
+        self.feedforward(x)
+        return np.argmax(self.activations[-1])
