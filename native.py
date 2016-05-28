@@ -30,3 +30,32 @@ class NeuralNetwork(object):
         # Training examples can be treated as activations coming out of input
         # layer. Hence self.activations[0] = (training_example).
         self.activations = [np.random.randn(y, 1) for y in sizes]
+
+    def feedforward(self, x):
+        self.activations[0] = x
+        for i in range(1, self.num_layers):
+            self.zs[i] = self.weights[i] * x + self.biases[i]
+            self.activations[i] = sigmoid(self.zs[i])
+
+    def back_propagation(self, x, y):
+        # First a feed forward run.
+        self.feedforward(x)
+
+        # Initialization of matrices to hold errors.
+        nabla_b = [np.zeros(bias.shape) for bias in self.biases]
+        nabla_w = [np.zeros(weight.shape) for weight in self.weights]
+
+        # Calculate error and cost derivative for output layer.
+        error = (self.activations[-1] - y) * sigmoid_prime(self.zs[-1])
+        nabla_b[-1] = error
+        nabla_w[-1] = np.dot(error, self.activations[-2].transpose())
+
+        # Backward pass of error.
+        for l in range(self.num_layers - 2, 0, -1):
+            error = np.dot(error, self.weights[l + 1].transpose()) * \
+                sigmoid_prime(self.zs[l])
+
+            nabla_b[l] = error
+            nabla_w[l] = np.dot(error, self.activations[l - 1].transpose())
+
+        return nabla_b, nabla_w
