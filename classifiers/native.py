@@ -32,6 +32,17 @@ class NeuralNetwork(object):
         # layer. Hence self.activations[0] = (training_example).
         self.activations = [np.random.randn(y, 1) for y in sizes]
 
+    def fit(self, training_data, mini_batch_size=1, epochs=1, eta=1.0):
+        if mini_batch_size == 1:
+            self.incremental_gradient_descent(training_data, epochs, eta)
+        else:
+            self.stochastic_gradient_descent(training_data, mini_batch_size,
+                                             epochs, eta)
+
+    def predict(self, x):
+        self.feedforward(x)
+        return np.argmax(self.activations[-1])
+
     def feedforward(self, x):
         self.activations[0] = x
         for i in range(1, self.num_layers):
@@ -92,9 +103,4 @@ class NeuralNetwork(object):
                                 zip(self.weights, nabla_w)]
                 self.biases = [b - (eta / mini_batch_size) * db for b, db in
                                zip(self.biases, nabla_b)]
-
             epochs -= 1
-
-    def predict(self, x):
-        self.feedforward(x)
-        return np.argmax(self.activations[-1])
