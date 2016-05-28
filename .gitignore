@@ -3,4 +3,4 @@
 
 # Intellij project files
 *.iml
-.idea/
+.idea/*
