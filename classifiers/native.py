@@ -18,8 +18,8 @@ class NeuralNetwork(object):
 
         # First term corresponds to layer 0 (input layer). No weights enter the
         # input layer and hence self.weights[0] is redundant.
-        self.weights = [[0], [np.random.randn(y, x)
-                              for x, y in zip(sizes[1:], sizes[:-1])]]
+        self.weights = [np.array([0])] + [np.random.randn(y, x)
+                        for y, x in zip(sizes[1:], sizes[:-1])]
 
         # Input layer does not have any biases. self.biases[0] is redundant.
         self.biases = [np.random.randn(y, 1) for y in sizes]
@@ -35,7 +35,8 @@ class NeuralNetwork(object):
     def feedforward(self, x):
         self.activations[0] = x
         for i in range(1, self.num_layers):
-            self.zs[i] = self.weights[i] * x + self.biases[i]
+            self.zs[i] = np.dot(self.weights[i], self.activations[i - 1]) + \
+                         self.biases[i]
             self.activations[i] = sigmoid(self.zs[i])
 
     def back_propagation(self, x, y):
@@ -53,7 +54,7 @@ class NeuralNetwork(object):
 
         # Backward pass of error.
         for l in range(self.num_layers - 2, 0, -1):
-            error = np.dot(error, self.weights[l + 1].transpose()) * \
+            error = np.dot(self.weights[l + 1].transpose(), error) * \
                 sigmoid_prime(self.zs[l])
 
             nabla_b[l] = error
@@ -68,8 +69,8 @@ class NeuralNetwork(object):
             # after calculation of error from each example.
             for x, y in training_data:
                 nabla_b, nabla_w = self.back_propagation(x, y)
-                self.weights = [w - eta * dw for w, dw in self.weights, nabla_w]
-                self.biases = [b - eta * db for b, db in self.biases, nabla_b]
+                self.weights = [w - eta * dw for w, dw in zip(self.weights, nabla_w)]
+                self.biases = [b - eta * db for b, db in zip(self.biases, nabla_b)]
 
     def predict(self, x):
         self.feedforward(x)
