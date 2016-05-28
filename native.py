@@ -1,4 +1,5 @@
 import numpy as np
+import random
 
 
 def sigmoid(z):
@@ -59,3 +60,13 @@ class NeuralNetwork(object):
             nabla_w[l] = np.dot(error, self.activations[l - 1].transpose())
 
         return nabla_b, nabla_w
+
+    def incremental_gradient_descent(self, training_data, epochs, eta):
+        while epochs > 0:
+            random.shuffle(training_data)
+            # Incremental learning of neural network. Cost function is updated
+            # after calculation of error from each example.
+            for x, y in training_data:
+                nabla_b, nabla_w = self.back_propagation(x, y)
+                self.weights = [w - eta * dw for w, dw in self.weights, nabla_w]
+                self.biases = [b - eta * db for b, db  in self.biases, nabla_b]
