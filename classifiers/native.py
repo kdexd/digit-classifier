@@ -73,6 +73,28 @@ class NeuralNetwork(object):
                 self.biases = [b - eta * db for b, db in zip(self.biases, nabla_b)]
             epochs -= 1
 
+    def stochastic_gradient_descent(self, training_data, mini_batch_size,
+                                    epochs, eta):
+        while epochs > 0:
+            random.shuffle(training_data)
+            mini_batches = [training_data[k:k + mini_batch_size] for k in
+                            range(0, len(training_data), mini_batch_size)]
+
+            for mini_batch in mini_batches:
+                nabla_b = [np.zeros(bias.shape) for bias in self.biases]
+                nabla_w = [np.zeros(weight.shape) for weight in self.weights]
+                for x, y in mini_batch:
+                    delta_nabla_b, delta_nabla_w = self.back_propagation(x, y)
+                    nabla_b = [nb + dnb for nb, dnb in zip(nabla_b, delta_nabla_b)]
+                    nabla_w = [nw + dnw for nw, dnw in zip(nabla_w, delta_nabla_w)]
+
+                self.weights = [w - (eta / mini_batch_size) * dw for w, dw in
+                                zip(self.weights, nabla_w)]
+                self.biases = [b - (eta / mini_batch_size) * db for b, db in
+                               zip(self.biases, nabla_b)]
+
+            epochs -= 1
+
     def predict(self, x):
         self.feedforward(x)
         return np.argmax(self.activations[-1])
