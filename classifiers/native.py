@@ -71,6 +71,7 @@ class NeuralNetwork(object):
                 nabla_b, nabla_w = self.back_propagation(x, y)
                 self.weights = [w - eta * dw for w, dw in zip(self.weights, nabla_w)]
                 self.biases = [b - eta * db for b, db in zip(self.biases, nabla_b)]
+            epochs -= 1
 
     def predict(self, x):
         self.feedforward(x)
