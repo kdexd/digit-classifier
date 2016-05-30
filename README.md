@@ -22,13 +22,18 @@ layer(first layer) has no bias vector. So indexing got weird with `numpy` and MA
 
 ### Naming and Indexing Convention:
 
-![Small Labelled Neural Network](http://i.imgur.com/0UniQVU.png)
-
 I have followed a particular convention in indexing quantities.
+Dimensions of quantities are listed according to this figure.
+
+![Small Labelled Neural Network](http://i.imgur.com/HdfentB.png)
+
 
 #### **Layers**
 * Input layer is the **0<sup>th</sup>** layer, and output layer 
 is the **L<sup>th</sup>** layer. Number of layers: **N<sub>L</sub> = L + 1**.
+```
+sizes = [2, 3, 1]
+```
 
 #### **Weights**
 * Weights in this neural network implementation are a list of 
@@ -39,6 +44,11 @@ part of **j<sup>th</sup>** row, which is a collection of all weights entering
 **j<sup>th</sup>** neuron, from all neurons (0 to k) of **(l-1)<sup>th</sup>** layer.  
 * No weights enter the input layer, hence `weights[0]` is redundant, and further it 
 follows as `weights[1]` being the collection of weights entering layer 1 and so on.
+```
+weights = |¯   [[]],    [[a, b],    [[p],   ¯|
+          |              [c, d],     [q],    |
+          |_             [e, f]],    [r]]   _|
+```
 
 #### **Biases**
 * Biases in this neural network implementation are a list of one-dimensional 
@@ -48,6 +58,11 @@ vectors (`numpy.ndarrays`). `biases[l]` is a vector of biases of neurons in the
 part of **j<sup>th</sup>** row, the bias of **j<sup>th</sup>** in layer.  
 * Input layer has no biases, hence `biases[0]` is redundant, and further it 
 follows as `biases[1]` being the biases of neurons of layer 1 and so on.
+```
+biases = |¯   [[],    [[0],    [[0]]   ¯|
+         |     []],    [1],             |
+         |_            [2]],           _|
+```
 
 #### **'Z's**
 * For input vector **x** to a layer **l**, **z** is defined as: 
