@@ -91,4 +91,4 @@ weight or bias, hence `zs[0]` is redundant.
 which serve as input to **(l+1)<sup>th</sup>** layer. The dimensions of `biases`, `zs` and 
 `activations` are similar.
 * Input layer provides **x** vector as input to layer 1, hence `activations[0]` can be related 
-to **x** - the input trainng example.
+to **x** - the input training example.
