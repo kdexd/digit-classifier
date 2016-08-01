@@ -29,7 +29,7 @@ For total beginners who landed up here before reading anything about Neural Netw
 * Usually, neural networks are made up of building blocks known as **Sigmoid Neurons**. 
 These are named so because their output follows [Sigmoid Function](https://en.wikipedia.org/wiki/Sigmoid_function).
 * **x<sub>j</sub>** are inputs, which are weighted by **w<sub>j</sub>** weights and 
-the neuron has its intrinsic bias **b**. THe output of neuron is known as "activation ( **a** )".
+the neuron has its intrinsic bias **b**. The output of neuron is known as "activation ( **a** )".
 * A neural network is made up by stacking layers of neurons, and is defined by the 
 weights of connections and biases of neurons. Activations are a result dependent on a
 particular input.
