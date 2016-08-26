@@ -1,13 +1,7 @@
 import numpy as np
 import random
 
-
-def sigmoid(z):
-    return 1.0 / (1.0 + np.exp(-z))
-
-
-def sigmoid_prime(z):
-    return sigmoid(z) * (1 - sigmoid(z))
+from native.activations import sigmoid, sigmoid_prime
 
 
 class NeuralNetwork(object):
