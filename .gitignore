@@ -4,3 +4,6 @@
 # Intellij project files
 *.iml
 .idea/*
+
+# Model files (compressed numpy binaries)
+models/*
