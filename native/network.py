@@ -5,7 +5,7 @@ from native.activations import sigmoid, sigmoid_prime
 
 
 class NeuralNetwork(object):
-    def __init__(self, sizes):
+    def __init__(self, sizes=list()):
         # Input layer is layer 0, followed by hidden layers layer 1, 2, 3...
         self.sizes = sizes
         self.num_layers = len(sizes)
@@ -25,6 +25,27 @@ class NeuralNetwork(object):
         # Training examples can be treated as activations coming out of input
         # layer. Hence self.activations[0] = (training_example).
         self.activations = [np.random.randn(y, 1) for y in sizes]
+
+    def from_npz(self, npz_members):
+        """
+        Prepare a neural network model from a numpy array of weights and biases.
+        This means a pretrained model can be directly ingested and used.
+
+        Sizes of layers are derived from dimensions of numpy arrays.
+
+        :param npz_members: Dictionary with two members 'weights' and 'biases'.
+        """
+        self.weights = npz_members['weights']
+        self.biases = npz_members['biases']
+
+        # Bias vectors of each layer has same length as the number of neurons
+        # in that layer. So we can build `sizes` through biases vectors.
+        self.sizes = [b.shape[0] for b in self.biases]
+        self.num_layers = len(self.sizes)
+
+        # These are declared as per desired shape.
+        self.zs = [np.random.randn(y, 1) for y in self.sizes]
+        self.activations = [np.random.randn(y, 1) for y in self.sizes]
 
     def fit(self, training_data, mini_batch_size=1, epochs=1, eta=1.0):
         if mini_batch_size == 1:
