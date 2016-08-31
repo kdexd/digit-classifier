@@ -5,5 +5,11 @@
 *.iml
 .idea/*
 
+# IPython Notebook Checkpoints
+.ipynb_checkpoints/*
+
+# MNIST dataset directory
+data/*
+
 # Model files (compressed numpy binaries)
 models/*
