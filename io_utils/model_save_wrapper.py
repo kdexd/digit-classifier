@@ -3,8 +3,10 @@ Wrapper module to save the weights and biases of a particular network model
 as compressed numpy binaries.
 """
 import os
+
 import numpy as np
-from native.network import NeuralNetwork
+
+from network import NeuralNetwork
 
 model_dirpath = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), os.pardir, 'models'

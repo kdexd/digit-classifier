@@ -1,7 +1,8 @@
-import numpy as np
 import random
 
-from native.activations import sigmoid, sigmoid_prime
+import numpy as np
+
+from activations import sigmoid, sigmoid_prime
 
 
 class NeuralNetwork(object):
