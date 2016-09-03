@@ -21,8 +21,3 @@ def save_model(network, dirpath=model_dirpath, filename='model.npz'):
     )
 
 
-def model_from_file(filepath):
-    npz_members = np.load(filepath)
-    network = NeuralNetwork()
-    network.from_npz(npz_members)
-    return network
