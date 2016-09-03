@@ -110,8 +110,8 @@ class NeuralNetwork(object):
         """
         npz_members = np.load(os.path.join(os.curdir, 'models', filename))
 
-        self.weights = npz_members['weights']
-        self.biases = npz_members['biases']
+        self.weights = list(npz_members['weights'])
+        self.biases = list(npz_members['biases'])
 
         # Bias vectors of each layer has same length as the number of neurons
         # in that layer. So we can build `sizes` through biases vectors.
@@ -123,8 +123,27 @@ class NeuralNetwork(object):
         self._activations = [np.zeros(bias.shape) for bias in self.biases]
 
         # Other hyperparameters are set as specified in model. These were cast
-        # to numpy arrays for saving in the compressed binary. They'll be the
-        # first and only element in corresponding arrays obtained from binary.
-        self.mini_batch_size = npz_members['mini_batch_size'][0]
-        self.epochs = npz_members['epochs'][0]
-        self.eta = npz_members['eta'][0]
+        # to numpy arrays for saving in the compressed binary.
+        self.mini_batch_size = int(npz_members['mini_batch_size'])
+        self.epochs = int(npz_members['epochs'])
+        self.eta = float(npz_members['eta'])
+
+    def save(self, filename='model.npz'):
+        """Save weights, biases and hyperparameters of neural network to a
+        compressed binary. This ``.npz`` binary is saved in 'models' directory.
+
+        Parameters
+        ----------
+        filename : str, optional
+            Name of the ``.npz`` compressed binary in to be saved.
+
+        """
+        np.savez_compressed(
+            file=os.path.join(os.curdir, 'models', filename),
+            weights=self.weights,
+            biases=self.biases,
+            mini_batch_size=self.mini_batch_size,
+            epochs=self.epochs,
+            eta=self.eta
+        )
+
