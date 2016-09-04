@@ -93,6 +93,19 @@ class NeuralNetwork(object):
                 print("Processed epoch {0}.".format(epoch))
 
     def validate(self, validation_data):
+        """Validate the Neural Network on provided validation data. It uses the
+        number of correctly predicted examples as validation accuracy metric.
+
+        Parameters
+        ----------
+        validation_data : list of tuple
+
+        Returns
+        -------
+        int
+            Number of correctly predicted images.
+
+        """
         validation_results = [(self.predict(x) == y) for x, y in validation_data]
         return sum(result for result in validation_results)
 
