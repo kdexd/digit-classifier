@@ -110,6 +110,19 @@ class NeuralNetwork(object):
         return sum(result for result in validation_results)
 
     def predict(self, x):
+        """Predict the label of a single test example (image).
+
+        Parameters
+        ----------
+        x : numpy.array
+
+        Returns
+        -------
+        int
+            Predicted label of example (image).
+
+        """
+
         self._forward_prop(x)
         return np.argmax(self._activations[-1])
 
