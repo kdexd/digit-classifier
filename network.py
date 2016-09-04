@@ -24,6 +24,7 @@ class NeuralNetwork(object):
             Size of each mini batch of training examples as used by Stochastic
             Gradient Descent. Denotes after how many examples the weights
             and biases would be updated. Default size is 16.
+
         """
         # Input layer is layer 0, followed by hidden layers layer 1, 2, 3...
         self.sizes = sizes
@@ -50,6 +51,19 @@ class NeuralNetwork(object):
         self.eta = learning_rate
 
     def fit(self, training_data, validation_data=None):
+        """Fit (train) the Neural Network on provided training data. Fitting is
+        carried out using Stochastic Gradient Descent Algorithm.
+
+        Parameters
+        ----------
+        training_data : list of tuple
+            A list of tuples of numpy arrays, ordered as (image, label).
+
+        validation_data : list of tuple, optional
+            Same as `training_data`, if provided, the network will display
+            validation accuracy after each epoch.
+
+        """
         for epoch in range(self.epochs):
             random.shuffle(training_data)
             mini_batches = [
