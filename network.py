@@ -9,7 +9,22 @@ class NeuralNetwork(object):
 
     def __init__(self, sizes=list(), learning_rate=1.0, mini_batch_size=16,
                  epochs=10):
-        """Initialize a Neural Network with sizes of layers specified."""
+        """Initialize a Neural Network model.
+
+        Parameters
+        ----------
+        sizes : list, optional
+            A list of integers specifying number of neurns in each layer. Not
+            required if a pretrained model is used.
+
+        learning_rate : float, optional
+            Learning rate for gradient descent optimization. Defaults to 1.0
+
+        mini_batch_size : int, optional
+            Size of each mini batch of training examples as used by Stochastic
+            Gradient Descent. Denotes after how many examples the weights
+            and biases would be updated. Default size is 16.
+        """
         # Input layer is layer 0, followed by hidden layers layer 1, 2, 3...
         self.sizes = sizes
         self.num_layers = len(sizes)
