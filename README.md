@@ -1,9 +1,28 @@
 MNIST Handwritten Digit Classifier
 ==================================
 
-An implementation of multilayer neural network using Python's `numpy` library. 
-The implementation is a modified version of Michael Nielsen's implementation 
-in [Neural Networks and Deep Learning](http://neuralnetworksanddeeplearning.com/) book. 
+An implementation of multilayer neural network using `numpy` library. The implementation 
+is a modified version of Michael Nielsen's implementation in 
+[Neural Networks and Deep Learning](http://neuralnetworksanddeeplearning.com/) book. 
+
+
+### Brief Background:
+
+If you are familiar with basics of Neural Networks, feel free to skip this section. For 
+total beginners who landed up here before reading anything about Neural Networks:
+
+![Sigmoid Neuron](http://i.imgur.com/dOkT9Y9.png)
+
+* Neural networks are made up of building blocks known as **Sigmoid Neurons**. These are 
+named so because their output follows [Sigmoid Function](https://en.wikipedia.org/wiki/Sigmoid_function).
+* **x<sub>j</sub>** are inputs, which are weighted by **w<sub>j</sub>** weights and the 
+neuron has its intrinsic bias **b**. The output of neuron is known as "activation ( **a** )".
+
+_**Note:** There are other functions in use other than sigmoid, but this information for
+now is sufficient for beginners._
+
+* A neural network is made up by stacking layers of neurons, and is defined by the weights 
+of connections and biases of neurons. Activations are a result dependent on a certain input.
 
 
 ### Why a modified implementation ?
@@ -11,28 +30,15 @@ in [Neural Networks and Deep Learning](http://neuralnetworksanddeeplearning.com/
 This book and Stanford's Machine Learning Course by Prof. Andrew Ng are recommended as 
 good resources for beginners. At times, it got confusing to me while referring both resources:
 
-> Stanford Course uses MATLAB, which has _1-indexed_ vectors and matrices.  
-> The book uses `numpy` library of Python, which has _0-indexed_ vectors and arrays.
+MATLAB has _1-indexed_ data structures, while `numpy` has them _0-indexed_. Some parameters 
+of a neural network are not defined for the input layer, so there was a little mess up in 
+mathematical equations of book, and indices in code. For example according to the book, the 
+bias vector of second layer of neural network was referred as `bias[0]` as input layer (first 
+layer) has no bias vector. I found it a bit inconvenient to play with.
 
-Further more, some parameters of a neural network are not defined for the input layer, 
-hence I didn't get a hang of implementation using Python. For example according to the book, 
-the bias vector of second layer of neural network was referred as `bias[0]` as input 
-layer(first layer) has no bias vector. So indexing got weird with `numpy` and MATLAB.
-
-
-### Brief Background:
-
-For total beginners who landed up here before reading anything about Neural Networks:
-
-![Sigmoid Neuron](http://i.imgur.com/dOkT9Y9.png)
-
-* Usually, neural networks are made up of building blocks known as **Sigmoid Neurons**. 
-These are named so because their output follows [Sigmoid Function](https://en.wikipedia.org/wiki/Sigmoid_function).
-* **x<sub>j</sub>** are inputs, which are weighted by **w<sub>j</sub>** weights and 
-the neuron has its intrinsic bias **b**. The output of neuron is known as "activation ( **a** )".
-* A neural network is made up by stacking layers of neurons, and is defined by the 
-weights of connections and biases of neurons. Activations are a result dependent on a
-particular input.
+I am fond of Scikit Learn's API style, hence my class has a similar structure of code. While 
+theoretically it resembles the book and Stanford's course, you can find simple methods such 
+as `fit`, `predict`, `validate` to train, test, validate the model respectively.
 
 
 ### Naming and Indexing Convention:
