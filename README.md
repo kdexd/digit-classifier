@@ -98,3 +98,9 @@ which serve as input to **(l+1)<sup>th</sup>** layer. The dimensions of `biases`
 `activations` are similar.
 * Input layer provides **x** vector as input to layer 1, hence `activations[0]` can be related 
 to **x** - the input training example.
+
+#### **Execution of Neural network**
+```
+#to train and test the neural network algorithm, please use the following command
+python main.py
+```
