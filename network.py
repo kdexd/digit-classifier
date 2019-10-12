@@ -2,13 +2,18 @@ import os
 import numpy as np
 import random
 
-from activations import sigmoid, sigmoid_prime
+import activations
 
 
 class NeuralNetwork(object):
 
-    def __init__(self, sizes=list(), learning_rate=1.0, mini_batch_size=16,
-                 epochs=10):
+    def __init__(
+        self,
+        sizes=[784, 30, 10],
+        learning_rate=1e-2,
+        mini_batch_size=16,
+        activation_fn="relu"
+    ):
         """Initialize a Neural Network model.
 
         Parameters
@@ -25,18 +30,25 @@ class NeuralNetwork(object):
             Gradient Descent. Denotes after how many examples the weights
             and biases would be updated. Default size is 16.
 
+        activation_fn: str, optional
+            Which activation to use in intermediate layers, one of {"sigmoid",
+            "tanh", "self.activation_fn"}. Final layer activation is always "softmax".
+            Default value is "self.activation_fn".
         """
+
         # Input layer is layer 0, followed by hidden layers layer 1, 2, 3...
         self.sizes = sizes
         self.num_layers = len(sizes)
+        self.activation_fn = getattr(activations, activation_fn)
+        self.activation_fn_prime = getattr(activations, f"{activation_fn}_prime")
 
         # First term corresponds to layer 0 (input layer). No weights enter the
         # input layer and hence self.weights[0] is redundant.
-        self.weights = [np.array([0])] + [np.random.randn(y, x) for y, x in
+        self.weights = [np.array([0])] + [np.random.randn(y, x)/np.sqrt(x) for y, x in
                                           zip(sizes[1:], sizes[:-1])]
 
         # Input layer does not have any biases. self.biases[0] is redundant.
-        self.biases = [np.random.randn(y, 1) for y in sizes]
+        self.biases = [np.array([0])] + [np.random.randn(y, 1) for y in sizes[1:]]
 
         # Input layer has no weights, biases associated. Hence z = wx + b is not
         # defined for input layer. self.zs[0] is redundant.
@@ -47,10 +59,9 @@ class NeuralNetwork(object):
         self._activations = [np.zeros(bias.shape) for bias in self.biases]
 
         self.mini_batch_size = mini_batch_size
-        self.epochs = epochs
-        self.eta = learning_rate
+        self.lr = learning_rate
 
-    def fit(self, training_data, validation_data=None):
+    def fit(self, training_data, validation_data=None, epochs=10):
         """Fit (train) the Neural Network on provided training data. Fitting is
         carried out using Stochastic Gradient Descent Algorithm.
 
@@ -64,7 +75,7 @@ class NeuralNetwork(object):
             validation accuracy after each epoch.
 
         """
-        for epoch in range(self.epochs):
+        for epoch in range(epochs):
             random.shuffle(training_data)
             mini_batches = [
                 training_data[k:k + self.mini_batch_size] for k in
@@ -80,17 +91,17 @@ class NeuralNetwork(object):
                     nabla_w = [nw + dnw for nw, dnw in zip(nabla_w, delta_nabla_w)]
 
                 self.weights = [
-                    w - (self.eta / self.mini_batch_size) * dw for w, dw in
+                    w - (self.lr / self.mini_batch_size) * dw for w, dw in
                     zip(self.weights, nabla_w)]
                 self.biases = [
-                    b - (self.eta / self.mini_batch_size) * db for b, db in
+                    b - (self.lr / self.mini_batch_size) * db for b, db in
                     zip(self.biases, nabla_b)]
 
             if validation_data:
                 accuracy = self.validate(validation_data) / 100.0
-                print("Epoch {0}, accuracy {1} %.".format(epoch + 1, accuracy))
+                print(f"Epoch {epoch + 1}, accuracy {accuracy} %.")
             else:
-                print("Processed epoch {0}.".format(epoch))
+                print(f"Processed epoch {epoch}.")
 
     def validate(self, validation_data):
         """Validate the Neural Network on provided validation data. It uses the
@@ -132,20 +143,24 @@ class NeuralNetwork(object):
             self._zs[i] = (
                 self.weights[i].dot(self._activations[i - 1]) + self.biases[i]
             )
-            self._activations[i] = sigmoid(self._zs[i])
+            # Use "softmax" for last layer.
+            if i == self.num_layers - 1:
+                self._activations[i] = activations.softmax(self._zs[i])
+            else:
+                self._activations[i] = self.activation_fn(self._zs[i])
 
     def _back_prop(self, x, y):
         nabla_b = [np.zeros(bias.shape) for bias in self.biases]
         nabla_w = [np.zeros(weight.shape) for weight in self.weights]
 
-        error = (self._activations[-1] - y) * sigmoid_prime(self._zs[-1])
+        error = (self._activations[-1] - y)
         nabla_b[-1] = error
         nabla_w[-1] = error.dot(self._activations[-2].transpose())
 
         for l in range(self.num_layers - 2, 0, -1):
             error = np.multiply(
                 self.weights[l + 1].transpose().dot(error),
-                sigmoid_prime(self._zs[l])
+                self.activation_fn_prime(self._zs[l])
             )
             nabla_b[l] = error
             nabla_w[l] = error.dot(self._activations[l - 1].transpose())
@@ -180,8 +195,7 @@ class NeuralNetwork(object):
         # Other hyperparameters are set as specified in model. These were cast
         # to numpy arrays for saving in the compressed binary.
         self.mini_batch_size = int(npz_members['mini_batch_size'])
-        self.epochs = int(npz_members['epochs'])
-        self.eta = float(npz_members['eta'])
+        self.lr = float(npz_members['lr'])
 
     def save(self, filename='model.npz'):
         """Save weights, biases and hyperparameters of neural network to a
@@ -198,7 +212,6 @@ class NeuralNetwork(object):
             weights=self.weights,
             biases=self.biases,
             mini_batch_size=self.mini_batch_size,
-            epochs=self.epochs,
-            eta=self.eta
+            lr=self.lr
         )
 

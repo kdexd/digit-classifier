@@ -22,10 +22,6 @@ def softmax(z):
     return np.exp(z) / np.sum(np.exp(z))
 
 
-def softmax_prime(z):
-    return softmax(z) * (1 - softmax(z))
-
-
 def tanh(z):
     return np.tanh(z)
 
@@ -39,4 +35,4 @@ def relu(z):
 
 
 def relu_prime(z):
-    return float(z > 0)
+    return z > 0
